@@ -6,6 +6,7 @@ def loadDataset(filename,k,dataSet=[]):
 	with open(filename,'rb') as csvfile:
 		lines=csv.reader(csvfile)
 		dataset=list(lines)
+		normalize(dataset)
 		banyak=len(dataset)/k
 		mulai=0 
 		for x in range(len(dataset)):
@@ -18,6 +19,7 @@ def loadDataset2(filename,k,centroid=[]):
 	with open(filename,'rb') as csvfile:
 		lines=csv.reader(csvfile)
 		dataset=list(lines)
+		normalize(dataset)
 		banyak=len(dataset)/k
 		mulai=0 
 		for x in range(k):
@@ -30,6 +32,19 @@ def loadDataset2(filename,k,centroid=[]):
 			z.append(0)#buat kelas baru
 			centroid.append(z)
 			mulai=mulai+banyak
+
+def normalize(dataset):
+    for m in range(len(dataset[0]) - 1):
+        temp = []
+        for n in range(len(dataset) - 1):
+            temp.append(float(dataset[n][m]))
+        minimal = min(temp)
+        maksimal = max(temp)
+        for o in range(len(dataset) - 1):
+            if maksimal - minimal == 0:
+                dataset[o][m] = temp[o]
+            else:
+                dataset[o][m] = (temp[o] - minimal) / (maksimal - minimal)
 
 def carijarak(dataset,centroid):
 	distance=0
