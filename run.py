@@ -67,7 +67,7 @@ def updatecentroid(dataset,k,centroid=[]):
 		for y in range(len(centroid[x])):
 			centroid[x][y]=0
 	atribut=len(dataset[0])
-	print atribut
+	#print atribut
 	for x in range(len(dataset)):#mencari jumlah total atribut
 		kls=dataset[x][atribut-1]
 		for y in range(atribut-2):#ganti -1 kalau gak ada kelas
@@ -85,6 +85,7 @@ def main():
 	dataset=[]
 	centroid=[]
 	loadDataset('iris.data',k,dataset)
+	#######################Membuat K Means############################################
 	loadDataset2('iris.data',k,centroid)
 	#printdataset(centroid)
 	
@@ -100,9 +101,25 @@ def main():
 	updatecentroid(dataset,k,centroid)#mengupdate centroid
 	#print "==============dataset=============="
 	#printdataset(dataset)
-	print "centroid"
-	printdataset(centroid)
-
-
-
+	#print "centroid"
+	#printdataset(centroid)
+	while True:
+		cek=1#udah konfergen belum
+		for x in range(len(dataset)):
+			#print "---------mulai--------------"
+			kelas=carikelas(dataset[x],k,centroid)
+			if dataset[x][len(dataset[x])-1]!=kelas:
+				cek=0
+			dataset[x][len(dataset[x])-1]=kelas
+			#print kelas
+			#print "----------Akhir-------------"
+		updatecentroid(dataset,k,centroid)#mengupdate centroid
+		#printdataset(centroid)
+		if cek==1:
+			#print "Sudah Konfergen"
+			break
+		#input()
+	print "===================Data Baru Setelah K Means============================"
+	printdataset(dataset)
+	##################################Akhir K Means########################################
 main()
