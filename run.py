@@ -36,11 +36,11 @@ def loadDataset2(filename,k,centroid=[]):
 def normalize(dataset):
     for m in range(len(dataset[0]) - 1):
         temp = []
-        for n in range(len(dataset) - 1):
+        for n in range(len(dataset)):
             temp.append(float(dataset[n][m]))
         minimal = min(temp)
         maksimal = max(temp)
-        for o in range(len(dataset) - 1):
+        for o in range(len(dataset)):
             if maksimal - minimal == 0:
                 dataset[o][m] = temp[o]
             else:
