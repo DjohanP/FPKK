@@ -1,5 +1,5 @@
 # FPKK
-Mengenai KMeans + Decision Tree
+Mengenai KMeans + KNN
 ## Anggota Kelompok
 1. Djohan Prabowo (5115100067)
 2. Rangga Senatama Putra (5115100076)

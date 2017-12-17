@@ -8,7 +8,7 @@ def loadDataset(filename,data=[]):
 		lines=csv.reader(csvfile)
 		dataset=list(lines)
 		for x in range(len(dataset)-1):
-			for y in range(8):
+			for y in range(len(dataset[x])-1):
 				dataset[x][y]=float(dataset[x][y])
 			data.append(dataset[x])
 
@@ -34,7 +34,7 @@ def Kfoldvalidation(banyakData,banyakFold,SisaFold,pilihan,data,k):
 				trainingSet.append(data[z])
 			elif z>=banyak:
 				trainingSet.append(data[z])
-		
+		print "============Mulai Debug===================="
 		for y in range(len(testSet)):
 			neighbors=getNeighbors(trainingSet,testSet[y],k,pilihan)
 			result=getResponse(neighbors)
@@ -42,9 +42,11 @@ def Kfoldvalidation(banyakData,banyakFold,SisaFold,pilihan,data,k):
 			print('> predicted=' + repr(result) + ', actual=' + repr(testSet[y][-1]))
 		accuracy=getAccuracy(testSet,predictions)
 		print('Accuracy '+repr(x+1)+': '+repr(accuracy)+'%')
+		print "================Akhir Debug=============="
 		total=total+accuracy
 		testSet=[]
 		trainingSet=[]
+		predictions=[]
 	return total
 
 def euclideandistance(instance1,instance2,length):
@@ -110,13 +112,18 @@ def getResponse(neighbors):
 def getAccuracy(testSet,predictions):
 	correct=0
 	for x in range(len(testSet)):
-		if testSet[x][-1] is predictions[x]:
+		print "===========Mulai=========="
+		if testSet[x][-1] == predictions[x]:
+			print "benar"
 			correct+=1
+		print testSet[x][-1]
+		print predictions[x]
+		print "=========Akhir==========="
 	return (correct/float(len(testSet)))*100.0
 
 def main():
 	data=[]
-	loadDataset('pima-indians-diabetes.data',data)
+	loadDataset('iris.data',data)
 	print("Pilih algoritma mencari jarak")
 	print("1. Eucledian Distance")
 	print("2. Cosine Distance")
