@@ -1,7 +1,9 @@
 import csv
 import math
 import copy
-
+import operator
+from sklearn.metrics.pairwise import cosine_similarity
+import random
 def loadDataset(filename,k,dataSet=[]):
 	with open(filename,'rb') as csvfile:
 		lines=csv.reader(csvfile)
@@ -93,6 +95,86 @@ def updatecentroid(dataset,k,centroid=[]):
 			centroid[x][y]=centroid[x][y]/centroid[x][atribut-1]
 
 
+def cosineSimilarity(instance1,instance2,length):
+	#distance=0
+	#Data1=[]
+	#Data2=[]
+	total=0
+	total=float(total)
+	dis1=0
+	dis1=float(dis1)
+	dis2=0
+	dis2=float(dis2)
+	for x in range(length):
+		m=instance1[x]
+		m=float(m)
+		y=instance2[x]
+		y=float(y)
+		total=total+(m*y)
+		dis1=dis1+(m*m)
+		dis2=dis2+(y*y)
+	dis1=math.sqrt(dis1)
+	dis2=math.sqrt(dis2)
+	result=total/dis1/dis2
+	#for x in range(length):
+	#	Data1.append(instance1[x])
+	#	Data2.append(instance2[x])
+	#result=cosine_similarity(Data1,Data2)
+	cos_sim=result
+	#if(cos_sim>1.0):
+	#	cos_sim=1.0
+	#elif(cos_sim< -1.0):
+	#	cos_sim=-1.0
+	#angle_in_radians=math.acos(cos_sim)
+	#return math.degrees(angle_in_radians)
+	return 1-cos_sim
+def getResponse(neighbors):
+	classvotes={}
+	for x in range(len(neighbors)):
+		response=neighbors[x][-1]
+		if response in classvotes:
+			classvotes[response]+=1
+		else:
+			classvotes[response]=1
+	sortedvotes=sorted(classvotes.iteritems(),key=operator.itemgetter(1),reverse=True)
+	return sortedvotes[0][0]
+
+def getNeighbors(trainingSet,testInstance,k):
+	distances=[]
+	length=len(testInstance)-2#ganti -1 jika gakada kelas
+	for x in range(len(trainingSet)):
+		dist=carijarak(testInstance,trainingSet[x])
+		#dist=cosineSimilarity(testInstance, trainingSet[x], length)	
+		#print dist
+		distances.append((trainingSet[x],dist))
+	distances.sort(key=operator.itemgetter(1))
+	neighbors=[]
+	for x in range(k):
+		neighbors.append(distances[x][0])
+	return neighbors
+
+
+def getAccuracy(testSet,predictions):
+	correct=0
+	for x in range(len(testSet)):
+		#print "========pecah========"
+		if testSet[x][-1]==predictions[x]:
+			correct+=1
+		#print testSet[x][-1]
+		#print predictions[x]
+		#print "============akhir========"
+	#print correct
+	return (correct/float(len(testSet)))*100.0
+def splitx(testset,trainingset,dataset):
+	rnd=0.67
+	for x in range(len(dataset)):
+		if random.random()<rnd:
+			trainingset.append(dataset[x])
+		else:
+			testset.append(dataset[x])
+
+
+
 def main():
 	k=input("Jumlah Kelas yang Diinginkan : ")
 	k=int(k)
@@ -137,5 +219,60 @@ def main():
 	print "===================Data Baru Setelah K Means============================"
 	printdataset(dataset)
 	##################################Akhir K Means########################################
-main()
+	testset=[]
+	trainingset=[]
+	predictions=[]
+	#splitx(testset,trainingset,dataset)
+	#print len(testset)
+	k=input("Masukkan K: ")
+	k=int(k)
+	fold=input("Masukkan Fold: ")
+	fold=int(fold)
+	sisafold=len(dataset)%fold
+	n=0
+	total=float(0)
+	for x in range(fold):
+		tambah=len(dataset)/fold
+		if(x<sisafold):
+			tambah=tambah+1
+		for y in range(tambah):
+			testset.append(dataset[n])
+			#print dataset[n]
+			n=n+1
+			#print n
 
+		for z in range(len(dataset)):
+			if z<n-tambah:
+				trainingset.append(dataset[z])
+			elif z>=n:
+				trainingset.append(dataset[z])
+		#print "=================MUlai debug=================="
+		for y in range(len(testset)):
+			neighbors=getNeighbors(trainingset,testset[y],k)
+			result=getResponse(neighbors)
+			predictions.append(result)
+			print('> predicted=' + repr(result) + ', actual=' + repr(testset[y][-1]))
+		accuracy=getAccuracy(testset,predictions)
+		#print accuracy
+		print('Accuraccy: '+repr(accuracy)+'%')
+		#print "===================Akhir Debug==============="
+		total=total+accuracy
+		testset=[]
+		trainingset=[]
+		predictions=[]
+	meanaccuracy=total/fold
+	print meanaccuracy
+
+
+	#print fold
+	#for x in range(len(testset)):
+	#	neighbors=getNeighbors(trainingset,testset[x],k)
+	#	result=getResponse(neighbors)
+	#	predictions.append(result)
+	#	#print result
+	#	print('> predicted=' + repr(result) + ', actual=' + repr(testset[x][-1]))
+
+	#accuracy=getAccuracy(testset,predictions)
+	#print('Accuraccy: '+repr(accuracy)+'%')
+	
+main()
