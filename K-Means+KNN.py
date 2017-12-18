@@ -2,7 +2,6 @@ import csv
 import math
 import copy
 import operator
-from sklearn.metrics.pairwise import cosine_similarity
 import random
 def loadDataset(filename,k,dataSet=[]):
 	with open(filename,'rb') as csvfile:
@@ -254,14 +253,14 @@ def main():
 			print('> predicted=' + repr(result) + ', actual=' + repr(testset[y][-1]))
 		accuracy=getAccuracy(testset,predictions)
 		#print accuracy
-		print('Accuraccy: '+repr(accuracy)+'%')
+		print('Accuracy: '+repr(round(accuracy, 2)) + '%')
 		#print "===================Akhir Debug==============="
 		total=total+accuracy
 		testset=[]
 		trainingset=[]
 		predictions=[]
 	meanaccuracy=total/fold
-	print meanaccuracy
+	print round(meanaccuracy, 2)
 
 
 	#print fold
