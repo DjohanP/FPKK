@@ -3,18 +3,37 @@ import math
 import copy
 import operator
 import random
-def loadDataset(filename,k,dataSet=[]):
+def loadDataset(filename,k):
 	with open(filename,'rb') as csvfile:
+		centroid = []
 		lines=csv.reader(csvfile)
 		dataset=list(lines)
 		normalize(dataset)
-		banyak=len(dataset)/k
-		mulai=0 
-		for x in range(len(dataset)):
-			for y in range(len(dataset[x])-1):#kalau gakada kelasnya seperti Iris-virginica hapus -1nya
-				dataset[x][y]=float(dataset[x][y])
-			dataset[x].append(0)#buat kelas baru
-			dataSet.append(dataset[x])
+		counter = 1
+		dummydict = {}  # buat nyimpen konversi string ke float
+		banyak = len(dataset) / k
+		mulai = 0
+	for x in range(len(dataset)):
+		for y in range(len(dataset[x])):
+			try:
+				dataset[x][y] = float(dataset[x][y])
+			except ValueError:
+				if dummydict.has_key(str(dataset[x][y])) == True:
+					dataset[x][y] = float(dummydict[str(dataset[x][y])])
+				else:
+					dummydict[str(dataset[x][y])] = counter
+					dataset[x][y] = float(counter)
+					counter = counter + 1
+		if x==len(dataset)-1:
+			z=copy.copy(dataset[len(dataset)-1])
+			mulai = 0 #biar nggak keiterasi lagi
+			centroid.append(z)
+		elif x == mulai:
+			z=copy.copy(dataset[mulai])
+			mulai = mulai + banyak
+			centroid.append(z)
+	return dataset, centroid
+
 
 def loadDataset2(filename,k,centroid=[]):
 	with open(filename,'rb') as csvfile:
@@ -51,10 +70,10 @@ def carijarak(dataset,centroid):
 	distance=0
 	distance=int(distance)
 	#print "---------hitungmulai-------"
-	for x in range(len(dataset)-2):#ganti -1 kalau gakada kelas seperti Iris-virginica
+	for x in range(len(dataset)-1):#ganti -0 kalau gakada kelas seperti Iris-virginica
 		dif=dataset[x]-centroid[x]
-		#print dataset[x]
-		#print centroid[x]
+		#print 'dataset =' + str(dataset[x])
+		#print 'centroid =' + str(centroid[x])
 		distance=distance+(dif*dif)
 	#print "--------hitungakhir--------"
 	return math.sqrt(distance)
@@ -82,16 +101,20 @@ def updatecentroid(dataset,k,centroid=[]):
 	for x in range(k):
 		for y in range(len(centroid[x])):
 			centroid[x][y]=0
-	atribut=len(dataset[0])
+#	atribut=len(dataset[0])
 	#print atribut
+	#print 'centroid'+str(len(centroid))
+	#print 'dataset ='+str(len(dataset))
 	for x in range(len(dataset)):#mencari jumlah total atribut
-		kls=dataset[x][atribut-1]
-		for y in range(atribut-2):#ganti -1 kalau gak ada kelas
+		kls=dataset[x][-1]
+		for y in range(len(dataset[0])-1):#ganti -0 kalau gak ada kelas
+#			print str(kls-1) + ' ' + str (y) + ' ' + str(x)
 			centroid[kls-1][y]=centroid[kls-1][y]+dataset[x][y]
-		centroid[kls-1][atribut-1]=centroid[kls-1][atribut-1]+1#terakhir sendiri
+		centroid[kls-1][-1]=centroid[kls-1][-1]+1#terakhir sendiri
 	for x in range(k):#mencari jumlah rata-ratanya
-		for y in range(atribut-2):#ganti -1 kalau gak ada kelas
-			centroid[x][y]=centroid[x][y]/centroid[x][atribut-1]
+		for y in range(len(dataset[0])-1):#ganti -0 kalau gak ada kelas
+			centroid[x][y]=centroid[x][y]/centroid[x][-1]
+			#print 'centroid =' + str(centroid[x][y])
 
 
 def cosineSimilarity(instance1,instance2,length):
@@ -178,20 +201,20 @@ def main():
 	k=input("Jumlah Kelas yang Diinginkan : ")
 	k=int(k)
 	#print k
-	dataset=[]
-	centroid=[]
-	loadDataset('iris.data',k,dataset)
+	dataset, centroid = loadDataset('iris.data',k)
 	#######################Membuat K Means############################################
-	loadDataset2('iris.data',k,centroid)
+#	loadDataset2('iris.data',k,centroid)
+	#print 'centroid : ' + str(centroid)
 	#printdataset(centroid)
-	
+	#print 'dataset =' + str(len(dataset))
 	for x in range(len(dataset)):
 		#print "---------mulai--------------"
 		kelas=carikelas(dataset[x],k,centroid)
 		dataset[x][len(dataset[x])-1]=kelas
 		#print kelas
 		#print "----------Akhir-------------"
-	#print len(dataset)
+	#print str(len(dataset))
+	#print 'dataset =' + str(dataset)
 
 
 	updatecentroid(dataset,k,centroid)#mengupdate centroid
@@ -205,9 +228,10 @@ def main():
 			#print "---------mulai--------------"
 			kelas=carikelas(dataset[x],k,centroid)
 			if dataset[x][len(dataset[x])-1]!=kelas:
+				#print str(dataset[x][len(dataset[x])-1]) + ' ' + str(kelas)
 				cek=0
 			dataset[x][len(dataset[x])-1]=kelas
-			#print kelas
+		#	print kelas
 			#print "----------Akhir-------------"
 		updatecentroid(dataset,k,centroid)#mengupdate centroid
 		#printdataset(centroid)
@@ -260,7 +284,7 @@ def main():
 		trainingset=[]
 		predictions=[]
 	meanaccuracy=total/fold
-	print round(meanaccuracy, 2)
+	print 'Akurasi Rata Rata adalah :' + str(round(meanaccuracy, 2)) + '%'
 
 
 	#print fold
