@@ -34,25 +34,6 @@ def loadDataset(filename,k):
 			centroid.append(z)
 	return dataset, centroid
 
-
-def loadDataset2(filename,k,centroid=[]):
-	with open(filename,'rb') as csvfile:
-		lines=csv.reader(csvfile)
-		dataset=list(lines)
-		normalize(dataset)
-		banyak=len(dataset)/k
-		mulai=0 
-		for x in range(k):
-			if x==k-1:
-				z=dataset[len(dataset)-1]
-			else:
-				z=dataset[mulai]
-			for y in range(len(z)-1):#kalau gakada kelasnya seperti Iris-virginica hapus -1nya
-				z[y]=float(z[y])
-			z.append(0)#buat kelas baru
-			centroid.append(z)
-			mulai=mulai+banyak
-
 def normalize(dataset):
     for m in range(len(dataset[0]) - 1):
         temp = []
@@ -103,7 +84,7 @@ def updatecentroid(dataset,k,centroid=[]):
 			centroid[x][y]=0
 #	atribut=len(dataset[0])
 	#print atribut
-	#print 'centroid'+str(len(centroid))
+	#print 'centroid'+str(centroid)
 	#print 'dataset ='+str(len(dataset))
 	for x in range(len(dataset)):#mencari jumlah total atribut
 		kls=dataset[x][-1]
