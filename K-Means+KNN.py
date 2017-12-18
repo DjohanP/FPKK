@@ -3,12 +3,12 @@ import math
 import copy
 import operator
 import random
-def loadDataset(filename,k):
+def loadDataset(filename,k,dataSet=[]):
 	with open(filename,'rb') as csvfile:
-		centroid = []
 		lines=csv.reader(csvfile)
 		dataset=list(lines)
 		normalize(dataset)
+<<<<<<< HEAD
 		counter = 1
 		dummydict = {}  # buat nyimpen konversi string ke float
 		banyak = len(dataset) / k
@@ -37,6 +37,33 @@ def loadDataset(filename,k):
 			centroid.append(z)
 		
 	return dataset, centroid
+=======
+		banyak=len(dataset)/k
+		mulai=0 
+		for x in range(len(dataset)):
+			for y in range(len(dataset[x])-1):#kalau gakada kelasnya seperti Iris-virginica hapus -1nya
+				dataset[x][y]=float(dataset[x][y])
+			dataset[x].append(0)#buat kelas baru
+			dataSet.append(dataset[x])
+
+def loadDataset2(filename,k,centroid=[]):
+	with open(filename,'rb') as csvfile:
+		lines=csv.reader(csvfile)
+		dataset=list(lines)
+		normalize(dataset)
+		banyak=len(dataset)/k
+		mulai=0 
+		for x in range(k):
+			if x==k-1:
+				z=dataset[len(dataset)-1]
+			else:
+				z=dataset[mulai]
+			for y in range(len(z)-1):#kalau gakada kelasnya seperti Iris-virginica hapus -1nya
+				z[y]=float(z[y])
+			z.append(0)#buat kelas baru
+			centroid.append(z)
+			mulai=mulai+banyak
+>>>>>>> parent of a7fcd5b... Merge pull request #1 from DjohanP/K-Means+KNN-Enhanced
 
 def normalize(dataset):
     for m in range(len(dataset[0]) - 1):
@@ -55,10 +82,10 @@ def carijarak(dataset,centroid):
 	distance=0
 	distance=int(distance)
 	#print "---------hitungmulai-------"
-	for x in range(len(dataset)-1):#ganti -0 kalau gakada kelas seperti Iris-virginica
+	for x in range(len(dataset)-2):#ganti -1 kalau gakada kelas seperti Iris-virginica
 		dif=dataset[x]-centroid[x]
-		#print 'dataset =' + str(dataset[x])
-		#print 'centroid =' + str(centroid[x])
+		#print dataset[x]
+		#print centroid[x]
 		distance=distance+(dif*dif)
 	#print "--------hitungakhir--------"
 	return math.sqrt(distance)
@@ -86,6 +113,7 @@ def updatecentroid(dataset,k,centroid=[]):
 	for x in range(k):
 		for y in range(len(centroid[x])):
 			centroid[x][y]=0
+<<<<<<< HEAD
 
 	for x in range(len(dataset)):#mencari jumlah total atribut
 		kls=dataset[x][-1]
@@ -95,10 +123,18 @@ def updatecentroid(dataset,k,centroid=[]):
 			centroid[kls-1][y]=centroid[kls-1][y]+dataset[x][y]
 		centroid[kls-1][-1]=centroid[kls-1][-1]+1#terakhir sendiri
 	#printdataset(centroid)
+=======
+	atribut=len(dataset[0])
+	#print atribut
+	for x in range(len(dataset)):#mencari jumlah total atribut
+		kls=dataset[x][atribut-1]
+		for y in range(atribut-2):#ganti -1 kalau gak ada kelas
+			centroid[kls-1][y]=centroid[kls-1][y]+dataset[x][y]
+		centroid[kls-1][atribut-1]=centroid[kls-1][atribut-1]+1#terakhir sendiri
+>>>>>>> parent of a7fcd5b... Merge pull request #1 from DjohanP/K-Means+KNN-Enhanced
 	for x in range(k):#mencari jumlah rata-ratanya
-		for y in range(len(dataset[0])-1):#ganti -0 kalau gak ada kelas
-			centroid[x][y]=centroid[x][y]/centroid[x][-1]
-			#print 'centroid =' + str(centroid[x][y])
+		for y in range(atribut-2):#ganti -1 kalau gak ada kelas
+			centroid[x][y]=centroid[x][y]/centroid[x][atribut-1]
 
 
 def cosineSimilarity(instance1,instance2,length):
@@ -186,6 +222,7 @@ def main():
 	k=input("Jumlah Kelas yang Diinginkan : ")
 	k=int(k)
 	#print k
+<<<<<<< HEAD
 	dataset, centroid = loadDataset('iris.data',k)
 	print len(dataset)
 	print "========================dataset========================"
@@ -200,6 +237,15 @@ def main():
 	print "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 	#######################Membuat K Means############################################
 
+=======
+	dataset=[]
+	centroid=[]
+	loadDataset('iris.data',k,dataset)
+	#######################Membuat K Means############################################
+	loadDataset2('iris.data',k,centroid)
+	#printdataset(centroid)
+	
+>>>>>>> parent of a7fcd5b... Merge pull request #1 from DjohanP/K-Means+KNN-Enhanced
 	for x in range(len(dataset)):
 		#print "---------mulai--------------"
 		kelas=carikelas(dataset[x],k,centroid)
@@ -207,9 +253,13 @@ def main():
 		#print kelas
 		#print kelas
 		#print "----------Akhir-------------"
+<<<<<<< HEAD
 	#print str(len(dataset))
 	printdataset(dataset)
 	#print 'dataset =' + str(dataset)
+=======
+	#print len(dataset)
+>>>>>>> parent of a7fcd5b... Merge pull request #1 from DjohanP/K-Means+KNN-Enhanced
 
 
 	updatecentroid(dataset,k,centroid)#mengupdate centroid
@@ -223,10 +273,9 @@ def main():
 			#print "---------mulai--------------"
 			kelas=carikelas(dataset[x],k,centroid)
 			if dataset[x][len(dataset[x])-1]!=kelas:
-				#print str(dataset[x][len(dataset[x])-1]) + ' ' + str(kelas)
 				cek=0
 			dataset[x][len(dataset[x])-1]=kelas
-		#	print kelas
+			#print kelas
 			#print "----------Akhir-------------"
 		updatecentroid(dataset,k,centroid)#mengupdate centroid
 		#printdataset(centroid)
@@ -279,7 +328,7 @@ def main():
 		trainingset=[]
 		predictions=[]
 	meanaccuracy=total/fold
-	print 'Akurasi Rata Rata adalah :' + str(round(meanaccuracy, 2)) + '%'
+	print round(meanaccuracy, 2)
 
 
 	#print fold
