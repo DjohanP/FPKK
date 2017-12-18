@@ -12,8 +12,6 @@ def loadDataset(filename,k,dataSet=[]):
 		counter = 1
 		dummydict = {}  # buat nyimpen konversi string ke float
 		banyak = len(dataset) / k
-		banyak = int(banyak)
-		print banyak
 		mulai = 0
 	for x in range(len(dataset)):
 		for y in range(len(dataset[x])):
@@ -26,16 +24,14 @@ def loadDataset(filename,k,dataSet=[]):
 					dummydict[str(dataset[x][y])] = counter
 					dataset[x][y] = float(counter)
 					counter = counter + 1
-	for x in range(k):
-		if x==k-1:
+		if x==len(dataset)-1:
 			z=copy.copy(dataset[len(dataset)-1])
+			mulai = 0 #biar nggak keiterasi lagi
 			centroid.append(z)
-			mulai=0
-		elif x==mulai:
+		elif x == mulai:
 			z=copy.copy(dataset[mulai])
-			mulai=mulai+banyak
+			mulai = mulai + banyak
 			centroid.append(z)
-		
 	return dataset, centroid
 =======
 		banyak=len(dataset)/k
@@ -114,14 +110,21 @@ def updatecentroid(dataset,k,centroid=[]):
 		for y in range(len(centroid[x])):
 			centroid[x][y]=0
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+#	atribut=len(dataset[0])
+	#print atribut
+	#print 'centroid'+str(centroid)
+	#print 'dataset ='+str(len(dataset))
+>>>>>>> parent of 1f2e0ff... Centroid Masuk
 	for x in range(len(dataset)):#mencari jumlah total atribut
 		kls=dataset[x][-1]
-		#print kls
 		for y in range(len(dataset[0])-1):#ganti -0 kalau gak ada kelas
 #			print str(kls-1) + ' ' + str (y) + ' ' + str(x)
 			centroid[kls-1][y]=centroid[kls-1][y]+dataset[x][y]
 		centroid[kls-1][-1]=centroid[kls-1][-1]+1#terakhir sendiri
+<<<<<<< HEAD
 	#printdataset(centroid)
 =======
 	atribut=len(dataset[0])
@@ -132,6 +135,8 @@ def updatecentroid(dataset,k,centroid=[]):
 			centroid[kls-1][y]=centroid[kls-1][y]+dataset[x][y]
 		centroid[kls-1][atribut-1]=centroid[kls-1][atribut-1]+1#terakhir sendiri
 >>>>>>> parent of a7fcd5b... Merge pull request #1 from DjohanP/K-Means+KNN-Enhanced
+=======
+>>>>>>> parent of 1f2e0ff... Centroid Masuk
 	for x in range(k):#mencari jumlah rata-ratanya
 		for y in range(atribut-2):#ganti -1 kalau gak ada kelas
 			centroid[x][y]=centroid[x][y]/centroid[x][atribut-1]
@@ -215,8 +220,7 @@ def splitx(testset,trainingset,dataset):
 		else:
 			testset.append(dataset[x])
 
-[0.1666666666666668, 0.4583333333333333, 0.0847457627118644, 0.0, 1.0]
-[0.1666666666666668, 0.4583333333333333, 0.0847457627118644, 0.0, 1.0]
+
 
 def main():
 	k=input("Jumlah Kelas yang Diinginkan : ")
@@ -224,18 +228,8 @@ def main():
 	#print k
 <<<<<<< HEAD
 	dataset, centroid = loadDataset('iris.data',k)
-	print len(dataset)
-	print "========================dataset========================"
-	printdataset(dataset)
-	print "======================================================="
-	print "========================centroid========================"
-	print len(centroid)
-	for x in range(len(centroid)):
-		print x
-		print centroid[x]
-	#printdataset(centroid)
-	print "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 	#######################Membuat K Means############################################
+<<<<<<< HEAD
 
 =======
 	dataset=[]
@@ -246,16 +240,20 @@ def main():
 	#printdataset(centroid)
 	
 >>>>>>> parent of a7fcd5b... Merge pull request #1 from DjohanP/K-Means+KNN-Enhanced
+=======
+#	loadDataset2('iris.data',k,centroid)
+	#print 'centroid : ' + str(centroid)
+	#printdataset(centroid)
+	#print 'dataset =' + str(len(dataset))
+>>>>>>> parent of 1f2e0ff... Centroid Masuk
 	for x in range(len(dataset)):
 		#print "---------mulai--------------"
 		kelas=carikelas(dataset[x],k,centroid)
 		dataset[x][len(dataset[x])-1]=kelas
 		#print kelas
-		#print kelas
 		#print "----------Akhir-------------"
 <<<<<<< HEAD
 	#print str(len(dataset))
-	printdataset(dataset)
 	#print 'dataset =' + str(dataset)
 =======
 	#print len(dataset)
@@ -265,8 +263,8 @@ def main():
 	updatecentroid(dataset,k,centroid)#mengupdate centroid
 	#print "==============dataset=============="
 	#printdataset(dataset)
-	print "centroid"
-	printdataset(centroid)
+	#print "centroid"
+	#printdataset(centroid)
 	while True:
 		cek=1#udah konfergen belum
 		for x in range(len(dataset)):
