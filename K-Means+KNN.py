@@ -34,7 +34,8 @@ def loadDataset(filename,k):
                     dummydict[str(dataset[x][y])] = counter
                     dataset[x][y] = float(counter)
                     counter = counter + 1
-        if x==len(dataset)-1:
+    for x in range(k):
+        if x==k-1:
             z=copy.copy(dataset[len(dataset)-1])
             i = mulai
             centroid.append(z)
@@ -43,7 +44,7 @@ def loadDataset(filename,k):
                 i = i - 1
                 z = copy.copy(dataset[i])
                 centroid.append(z)
-        elif x == mulai:
+        else:
             z=copy.copy(dataset[mulai])
             centroid.append(z)
             i = mulai
@@ -204,6 +205,8 @@ def main():
     #print k
     dataset, centroid = loadDataset('iris.data',k)
     dupes = [x for n, x in enumerate(centroid) if x in centroid[:n]]
+    print "panjang centroid"
+    print len(centroid)
     print dupes  # [[1], [3]]
     # [[1], [3]]
     #printdataset(dataset)
