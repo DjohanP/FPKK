@@ -123,7 +123,7 @@ def getAccuracy(testSet,predictions):
 
 def main():
 	data=[]
-	loadDataset('iris.data',data)
+	loadDataset('hayes-roth.data',data)
 	print("Pilih algoritma mencari jarak")
 	print("1. Eucledian Distance")
 	print("2. Cosine Distance")

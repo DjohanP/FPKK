@@ -64,14 +64,18 @@ def normalize(dataset):
     for m in range(len(dataset[0]) - 1):
         temp = []
         for n in range(len(dataset)):
+	    #print dataset[n][m]
+	    #print n
             temp.append(float(dataset[n][m]))
         minimal = min(temp)
         maksimal = max(temp)
         for o in range(len(dataset)):
+	    #print o
             if maksimal - minimal == 0:
                 dataset[o][m] = temp[o]
             else:
                 dataset[o][m] = (temp[o] - minimal) / (maksimal - minimal)
+	#print "eror"
 
 def carijarak(dataset,centroid):
     distance=0
@@ -203,7 +207,7 @@ def main():
     k=input("Jumlah Kelas yang Diinginkan : ")
     k=int(k)
     #print k
-    dataset, centroid = loadDataset('iris.data',k)
+    dataset, centroid = loadDataset('hayes-roth.data',k)
     dupes = [x for n, x in enumerate(centroid) if x in centroid[:n]]
     print "panjang centroid"
     print len(centroid)
