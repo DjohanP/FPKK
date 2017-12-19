@@ -18,7 +18,8 @@ def loadDataset(filename,k):
         centroid = []
         lines=csv.reader(csvfile)
         dataset=list(lines)
-        normalize(dataset)
+        if test==1:
+            normalize(dataset)
         counter = 1
         dummydict = {}  # buat nyimpen konversi string ke float
         banyak = len(dataset) / k
@@ -206,6 +207,12 @@ def splitx(testset,trainingset,dataset):
 def main():
     k=input("Jumlah Kelas yang Diinginkan : ")
     k=int(k)
+    global test
+    test=3
+    while test>2 or test<1:
+        test=input("Gunakan Normalisasi? : 1. Yes 2.No")
+    test=int(k)
+
     #print k
     dataset, centroid = loadDataset('hayes-roth.data',k)
     dupes = [x for n, x in enumerate(centroid) if x in centroid[:n]]
